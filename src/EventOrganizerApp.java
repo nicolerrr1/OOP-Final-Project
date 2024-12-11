@@ -1,74 +1,96 @@
 package src;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 public class EventOrganizerApp {
-    private static EventManager eventManager = new EventManager();
-    private static Scanner scanner = new Scanner(System.in);
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
     public static void main(String[] args) {
-        boolean running = true;
+        Scanner scanner = new Scanner(System.in);
+        EventManager eventManager = new EventManager();
+        int choice;
 
-        while (running) {
-            System.out.println("Event Organizer Menu:");
+        do {
+            System.out.println("Event Organizer Application");
             System.out.println("1. Create Event");
-            System.out.println("2. List Events");
-            System.out.println("3. Delete Event");
-            System.out.println("0. Exit");
+            System.out.println("2. View All Events");
+            System.out.println("3. Update Event");
+            System.out.println("4. Delete Event");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
+            choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
                 case 1:
-                    createEvent();
+                    System.out.print("Enter event ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter event name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter event description: ");
+                    String description = scanner.nextLine();
+                    System.out.print("Enter event date (YYYY-MM-DD): ");
+                    String dateInput = scanner.nextLine();
+                    LocalDate desiredDate = LocalDate.parse(dateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+
+                    if (!DatabaseConnection.isDateAvailable(desiredDate)) {
+                        LocalDate suggestedDate = DatabaseConnection.suggestNextAvailableDate(desiredDate);
+                        System.out.println("The date " + desiredDate + " is already booked.");
+                        System.out.println("Suggested next available date: " + suggestedDate);
+                        System.out.print("Do you want to proceed with the suggested date? (yes/no): ");
+                        String proceed = scanner.nextLine();
+                        if (proceed.equalsIgnoreCase("yes")) {
+                            desiredDate = suggestedDate;
+                        } else {
+                            System.out.println("Event creation cancelled.");
+                            break;
+                        }
+                    }
+
+                    Event newEvent = new Event(id, name, description, desiredDate) {
+                        @Override
+                        public void displayDetails() {
+                            System.out.println("ID: " + getId() + ", Name: " + getName() + ", Description: " + getDescription() + ", Date: " + getDate());
+                        }
+                    };
+                    eventManager.manageEvent(1, newEvent, 0, null, null, null);
                     break;
+
                 case 2:
-                    eventManager.listEvents();
+                    eventManager.manageEvent(2, null, 0, null, null, null);
                     break;
+
                 case 3:
-                    deleteEvent();
+                    System.out.print("Enter event ID to update: ");
+                    int updateId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter new event name: ");
+                    String newName = scanner.nextLine();
+                    System.out.print("Enter new event description: ");
+                    String newDescription = scanner.nextLine();
+                    System.out.print("Enter new event date (YYYY-MM-DD): ");
+                    String newDateInput = scanner.nextLine();
+                    LocalDate newDate = LocalDate.parse(newDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+                    eventManager.manageEvent(3, null, updateId, newName, newDescription, newDate);
                     break;
-                case 0:
-                    running = false;
+
+                case 4:
+                    System.out.print("Enter event ID to delete: ");
+                    int deleteId = scanner.nextInt();
+                    scanner.nextLine();
+                    eventManager.manageEvent(4, null, deleteId, null, null, null);
                     break;
+
+                case 5:
+                    System.out.println("Exiting application...");
+                    break;
+
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
-        }
+        } while (choice != 5);
+
+        scanner.close();
     }
-
-    private static void createEvent() {
-        try {
-            System.out.print("Enter Event Name: ");
-            String name = scanner.nextLine();
-            System.out.print("Enter Date (yyyy-MM-dd): ");
-            Date date = dateFormat.parse(scanner.nextLine());
-            System.out.print("Enter Location: ");
-            String location = scanner.nextLine();
-            System.out.print("Enter Description: ");
-            String description = scanner.nextLine();
-
-            // Get the month and year from the selected date
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            int month = calendar.get(Calendar.MONTH) + 1; // Calendar.MONTH is zero-based
-            int year = calendar.get(Calendar.YEAR);
-
-            Event event = new Event(name, date, location, description);
-
-            // Check if the date is occupied
-            if (eventManager.isDateOccupied(date)) {
-                System.out.println("The selected date is already occupied. Suggesting available dates...");
-
-                // Find all occupied dates in the selected month
-                List<Date> occupiedDates = eventManager.getOccupiedDates(month, year);
-
-                // Get all dates in the selected month
-                List<Date> availableDates = getAvailableDatesInMonth(month, year, occupiedDates);
-
-                System.out.println("Available dates in " + year + "-" + month + ":");
-                for (
+}

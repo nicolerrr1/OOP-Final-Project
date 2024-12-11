@@ -1,33 +1,47 @@
 package src;
-import java.util.Date;
 
-public class Event {
-    private int eventId;
+import java.time.LocalDate;
+
+public abstract class Event {
+    private int id;
     private String name;
-    private Date date;
-    private String location;
     private String description;
+    private LocalDate date;
 
-    public Event(int eventId, String name, Date date, String location, String description) {
-        this.eventId = eventId;
+    public Event(int id, String name, String description, LocalDate date) {
+        this.id = id;
         this.name = name;
+        this.description = description;
         this.date = date;
-        this.location = location;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public Event(String name, Date date, String location, String description) {
-        this(0, name, date, location, description);
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public int getEventId() { return eventId; }
-    public String getName() { return name; }
-    public Date getDate() { return date; }
-    public String getLocation() { return location; }
-    public String getDescription() { return description; }
-
-    @Override
-    public String toString() {
-        return "Event ID: " + eventId + ", Name: " + name + ", Date: " + date + ", Location: " + location + ", Description: " + description;
-    }
+    public abstract void displayDetails();
 }

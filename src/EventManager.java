@@ -1,34 +1,25 @@
 package src;
 
-import java.util.List;
-
 public class EventManager {
     private EventDAO eventDAO = new EventDAO();
 
-    public void createEvent(Event event) {
-        eventDAO.createEvent(event);
-    }
-
-    public void listEvents() {
-        List<Event> events = eventDAO.getAllEvents();
-        if (events.isEmpty()) {
-            System.out.println("No events found.");
-        } else {
-            for (Event event : events) {
-                System.out.println(event);
-            }
+    public void manageEvent(int choice, Event event, int id, String name, String description, LocalDate date) {
+        switch (choice) {
+            case 1: // Create
+                eventDAO.createEvent(event);
+                System.out.println("Event created successfully.");
+                break;
+            case 2: // Read
+                eventDAO.readEvents();
+                break;
+            case 3: // Update
+                eventDAO.updateEvent(id, name, description, date);
+                break;
+            case 4: // Delete
+                eventDAO.deleteEvent(id);
+                break;
+            default:
+                System.out.println("Invalid choice.");
         }
-    }
-
-    public void deleteEvent(int eventId) {
-        eventDAO.deleteEvent(eventId);
-    }
-
-    public boolean isDateOccupied(Date date) {
-        return eventDAO.isDateOccupied(date);
-    }
-
-    public List<Date> getOccupiedDates(int month, int year) {
-        return eventDAO.getOccupiedDates(month, year);
     }
 }
