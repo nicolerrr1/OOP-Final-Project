@@ -19,39 +19,35 @@ public class EventOrganizerApp {
             System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
 
-            // Safe input for choice
             while (!scanner.hasNextInt()) {
                 System.out.println("Invalid input. Please enter an integer for your choice.");
-                scanner.nextLine(); // Consume the invalid input
+                scanner.nextLine(); 
             }
             choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline after the integer input
+            scanner.nextLine(); 
 
             switch (choice) {
                 case 1:
-                    // Safe integer input for event ID
+                    
                     int id = 0;
                     while (true) {
                         System.out.print("Enter event ID: ");
                         if (scanner.hasNextInt()) {
                             id = scanner.nextInt();
-                            scanner.nextLine(); // Consume newline
-                            break; // Exit loop if valid integer is entered
+                            scanner.nextLine(); 
+                            break; 
                         } else {
                             System.out.println("Invalid input. Please enter a valid integer for event ID.");
-                            scanner.nextLine(); // Consume invalid input
+                            scanner.nextLine(); 
                         }
                     }
 
-                    // Safe input for event name
                     System.out.print("Enter event name: ");
                     String name = scanner.nextLine();
 
-                    // Safe input for event description
                     System.out.print("Enter event description: ");
                     String description = scanner.nextLine();
 
-                    // Safe date input for event date
                     LocalDate desiredDate = null;
                     while (desiredDate == null) {
                         System.out.print("Enter event date (YYYY-MM-DD): ");
@@ -91,21 +87,19 @@ public class EventOrganizerApp {
                     break;
 
                 case 3:
-                    // Safe input for event ID to update
                     int updateId = 0;
                     while (true) {
                         System.out.print("Enter event ID to update: ");
                         if (scanner.hasNextInt()) {
                             updateId = scanner.nextInt();
-                            scanner.nextLine(); // Consume newline
+                            scanner.nextLine();
                             break;
                         } else {
                             System.out.println("Invalid input. Please enter a valid integer for event ID.");
-                            scanner.nextLine(); // Consume invalid input
+                            scanner.nextLine(); 
                         }
                     }
 
-                    // Safe input for new event details
                     System.out.print("Enter new event name: ");
                     String newName = scanner.nextLine();
                     System.out.print("Enter new event description: ");
@@ -126,17 +120,17 @@ public class EventOrganizerApp {
                     break;
 
                 case 4:
-                    // Safe input for event ID to delete
+
                     int deleteId = 0;
                     while (true) {
                         System.out.print("Enter event ID to delete: ");
                         if (scanner.hasNextInt()) {
                             deleteId = scanner.nextInt();
-                            scanner.nextLine(); // Consume newline
+                            scanner.nextLine();
                             break;
                         } else {
                             System.out.println("Invalid input. Please enter a valid integer for event ID.");
-                            scanner.nextLine(); // Consume invalid input
+                            scanner.nextLine();
                         }
                     }
 
