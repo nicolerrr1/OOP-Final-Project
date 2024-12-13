@@ -11,7 +11,7 @@ public class EventOrganizerApp {
         int choice;
 
         do {
-            System.out.println("Event Organizer Application");
+            System.out.println("WELCOME TO EVENT HUB!!");
             System.out.println("1. Create Event");
             System.out.println("2. View All Events");
             System.out.println("3. Update Event");
